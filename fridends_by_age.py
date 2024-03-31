@@ -12,8 +12,8 @@ def parse_line(line):
     return age, num_friends
 
 
-fridends_count = lines.map(parse_line)
-avg_friends_by_age = fridends_count.mapValues(lambda x: (x, 1)).reduceByKey(lambda x, y: (
+friends_count = lines.map(parse_line)
+avg_friends_by_age = friends_count.mapValues(lambda x: (x, 1)).reduceByKey(lambda x, y: (
     x[0] + y[0], x[1] + y[1])).mapValues(lambda x: x[0] / x[1]).collect()
 
 for age, avg_friends in sorted(avg_friends_by_age, key=lambda x: x[1], reverse=True):
