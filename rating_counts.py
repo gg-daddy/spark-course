@@ -11,7 +11,7 @@ u.data     -- The full u data set, 100000 ratings by 943 users on 1682 items.
 	         user id | item id | rating | timestamp. 
 '''
 lines = sc.textFile(
-    "/Users/chenyanbin/codebase/spark/spark-course/ml-100k/u.data")
+    "/Users/chenyanbin/codebase/spark/spark-course/dataset/ml-100k/u.data")
 ratings = lines.map(lambda x: x.split()[2])
 result = ratings.countByValue()
 
