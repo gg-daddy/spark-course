@@ -1,4 +1,5 @@
 from pyspark import SparkConf, SparkContext
+from utils import find_absolute_path
 
 conf = SparkConf().setMaster("local").setAppName("RatingsHistogram")
 sc = SparkContext(conf=conf)
@@ -10,8 +11,7 @@ u.data     -- The full u data set, 100000 ratings by 943 users on 1682 items.
               ordered. This is a tab separated list of 
 	         user id | item id | rating | timestamp. 
 '''
-lines = sc.textFile(
-    "/Users/chenyanbin/codebase/spark/spark-course/dataset/ml-100k/u.data")
+lines = sc.textFile(find_absolute_path("u.data"))
 ratings = lines.map(lambda x: x.split()[2])
 result = ratings.countByValue()
 

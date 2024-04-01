@@ -1,10 +1,10 @@
 from pyspark import SparkConf, SparkContext
+from utils import find_absolute_path
 
 conf = SparkConf().setMaster("local").setAppName("FridendsByAge - Average")
 sc = SparkContext(conf=conf)
 
-lines = sc.textFile(
-    "/Users/chenyanbin/codebase/spark/spark-course/dataset/fakefriends.csv")
+lines = sc.textFile(find_absolute_path("fakefriends.csv"))
 
 
 def parse_line(line):

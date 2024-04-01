@@ -1,11 +1,11 @@
 from pyspark import SparkConf, SparkContext
+from utils import find_absolute_path
 
 conf = SparkConf().setMaster("local").setAppName("TemperatureSearch")
 sc = SparkContext(conf=conf)
 
 
-station_temp = sc.textFile(
-    "/Users/chenyanbin/codebase/spark/spark-course/dataset/1800.csv")
+station_temp = sc.textFile(find_absolute_path("1800.csv"))
 
 
 def parse_line(line):
