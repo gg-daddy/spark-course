@@ -6,7 +6,7 @@ pyspark_scripts=(
 "./temperature_search.py"
 "./customer_spent.py"
 "./fridends_by_age.py"
-"./pysql_test.py"
+"./spark_sql_test.py"
 )
 
 # 对数组中的每个元素（即每个PySpark脚本的路径）执行循环
