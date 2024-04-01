@@ -1,6 +1,6 @@
 from pyspark import SparkConf, SparkContext
 import re
-from utils import find_absolute_path
+from dataset.utils import find_absolute_path
 
 conf = SparkConf().setMaster("local").setAppName("WordCount")
 sc = SparkContext(conf=conf)

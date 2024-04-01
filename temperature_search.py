@@ -1,5 +1,5 @@
 from pyspark import SparkConf, SparkContext
-from utils import find_absolute_path
+from dataset.utils import find_absolute_path
 
 conf = SparkConf().setMaster("local").setAppName("TemperatureSearch")
 sc = SparkContext(conf=conf)
