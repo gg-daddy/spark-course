@@ -1,6 +1,7 @@
 # Boilerplate stuff:
 from pyspark import SparkConf, SparkContext
 from dataset.utils import find_absolute_path
+from enum import Enum
 
 conf = SparkConf().setMaster("local").setAppName("DegreesOfSeparation")
 sc = SparkContext(conf=conf)
@@ -13,19 +14,24 @@ target_character_id = 11
 # our BFS traversal.
 hit_counter = sc.accumulator(0)
 
-COLOR_WHITE = 0
-COLOR_GRAY = 1
-COLOR_BLACK = 2
+
+class Color(Enum):
+    WHITE = 0
+    GRAY = 1
+    BLACK = 2
+
+    def __lt__(self, other):
+        return self.value < other.value
 
 
 def to_bfs(line):
     fields = map(int, line.split())
     heroID, *connections = fields
-    color = COLOR_WHITE
+    color = Color.WHITE
     distance = 9999
 
     if (heroID == start_character_id):
-        color = COLOR_GRAY
+        color = Color.GRAY
         distance = 0
 
     return (heroID, (connections, distance, color))
@@ -41,18 +47,18 @@ def bfs_flat_map(node):
     results = []
 
     # If this node needs to be expanded...
-    if (color == COLOR_GRAY):
+    if (color == Color.GRAY):
         for connection in connections:
             new_character_id = connection
             new_distance = distance + 1
-            new_color = COLOR_GRAY
+            new_color = Color.GRAY
             if (target_character_id == connection):
                 hit_counter.add(1)
 
             newEntry = (new_character_id, ([], new_distance, new_color))
             results.append(newEntry)
         # We've processed this node, so color it black
-        color = COLOR_BLACK
+        color = Color.BLACK
 
     # Emit the input node so we don't lose it.
     results.append((character_id, (connections, distance, color)))
@@ -73,7 +79,7 @@ def bfs_reduce(data1, data2):
 
 
 def continue_searching(iteration_rdd):
-    return iteration_rdd.filter(lambda node: node[1][2] == COLOR_GRAY).count() > 0
+    return iteration_rdd.filter(lambda node: node[1][2] == Color.GRAY).count() > 0
 
 
 # Main program here:
