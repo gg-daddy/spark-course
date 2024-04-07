@@ -4,6 +4,20 @@ import sys
 
 
 def compute_consine_similarity(movie_rating: F.DataFrame):
+    '''
+    下面的代码是计算余弦相似度的代码，这里的余弦相似度是指两个向量的夹角余弦值，值越大表示两个向量越相似。
+    余弦相似度的计算公式如下：
+    cos(θ) = A·B / |A|·|B|
+    其中A·B表示向量A和向量B的点积，|A|表示向量A的模，|B|表示向量B的模。
+    余弦相似度的取值范围是[-1, 1]，当余弦相似度为1时，表示两个向量的方向完全相同，余弦相似度为-1时，表示两个向量的方向完全相反。
+    余弦相似度为0时，表示两个向量是正交的。
+    余弦相似度的计算公式可以转化为下面的形式：
+    cos(θ) = Σ(Ai * Bi) / sqrt(Σ(Ai^2)) * sqrt(Σ(Bi^2))。
+    这里的Ai和Bi分别表示向量A和向量B的第i个元素。 
+
+    对应到当前的场景， Ai 和 Bi 分别代表同一个人分别对两部电影的评分。 
+    一个电影对应的向量就是所有用户对这部电影的评分，向量的每个元素是一个用户对这部电影的评分。
+    '''
     pair_scores = movie_rating.withColumn("xx", F.col("rating1") * F.col("rating1"))\
         .withColumn("yy", F.col("rating2") * F.col("rating2"))\
         .withColumn("xy", F.col("rating1") * F.col("rating2"))
