@@ -1,5 +1,5 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import regexp_extract
+from pyspark.sql.functions import regexp_extract, to_timestamp
 
 spark = SparkSession.Builder().appName("StructuredStreaming").getOrCreate()
 
@@ -9,12 +9,13 @@ access_lines = spark.readStream.text("./dataset/logs")
 contentSizeExp = r'\s(\d+)$'
 statusExp = r'\s(\d{3})\s'
 generalExp = r'\"(\S+)\s(\S+)\s*(\S*)\"'
-timeExp = r'\[(\d{2}/\w{3}/\d{4}:\d{2}:\d{2}:\d{2} -\d{4})]'
+timeExp = r'\[(\d{2}\/\w{3}\/\d{4}:\d{2}:\d{2}:\d{2} \+\d{4})\]'
 hostExp = r'(^\S+\.[\S+\.]+\S+)\s'
 
 df_logs = access_lines.select(
     regexp_extract('value', hostExp, 1).alias('host'),
-    regexp_extract('value', timeExp, 1).alias('timestamp'),
+    to_timestamp(regexp_extract('value', timeExp, 1),
+                 "dd/MMM/yyyy:HH:mm:ss Z").alias('event_time'),
     regexp_extract('value', generalExp, 1).alias('method'),
     regexp_extract('value', generalExp, 2).alias('endpoint'),
     regexp_extract('value', generalExp, 3).alias('protocol'),
